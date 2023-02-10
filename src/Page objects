@@ -1,0 +1,95 @@
+const { remote } = require('webdriverio');
+const assert = require('assert');
+
+// Page objects
+class HomePage {
+    constructor(browser) {
+        this.browser = browser;
+        this.searchBar = browser.$('#searchBar');
+        this.firstOption = browser.$('#firstOption');
+    }
+
+    async search(product) {
+        await this.searchBar.setValue(product);
+        await this.searchBar.submit();
+    }
+
+    async selectFirstOption() {
+        await this.firstOption.click();
+    }
+}
+
+class ProductPage {
+    constructor(browser) {
+        this.browser = browser;
+        this.addToCartButton = browser.$('#addToCartButton');
+    }
+
+    async addToCart() {
+        await this.addToCartButton.click();
+    }
+}
+
+class CartPage {
+    constructor(browser) {
+        this.browser = browser;
+        this.cartItem = browser.$('#cartItem');
+        this.removeFromCartButton = browser.$('#removeFromCartButton');
+    }
+
+    async removeFromCart() {
+        await this.removeFromCartButton.click();
+    }
+
+    async getCartItemText() {
+        return await this.cartItem.getText();
+    }
+}
+
+describe('Ejemplo de automatización de UI con WebDriverIO y Page Object', () => {
+    let browser;
+
+    beforeEach(async () => {
+        browser = await remote({
+            logLevel: 'error',
+            capabilities: {
+                browserName: 'chrome'
+            }
+        });
+    });
+
+    afterEach(async () => {
+        await browser.deleteSession();
+    });
+
+    it('realiza los pasos 1-10', async () => {
+        // Page objects
+        const homePage = new HomePage(browser);
+        const productPage = new ProductPage(browser);
+        const cartPage = new CartPage(browser);
+
+        // 1. Abrir un sitio web
+        await browser.url('https://www.example.com');
+
+        // 2. En la barra de búsqueda, ingresar el producto “iPhone” y buscar.
+        await homePage.search('iPhone');
+
+        // 3. Seleccionar la primera opción que aparezca.
+        await homePage.selectFirstOption();
+
+        // 4. Agregar el producto al carrito de compras.
+        await productPage.addToCart();
+
+        // 5. Ingresar al botón del carrito de compras.
+        const cartButton = await browser.$('#cartButton');
+        await cartButton.click();
+
+        // 6. Presionar "View Cart".
+        const viewCartButton = await browser.$('#viewCartButton');
+        await viewCartButton.click();
+
+        // 7. Validar que el iPhone seleccionado se encuentre en el carrito de compras.
+        const cartItemText = await cartPage.getCartItemText();
+        assert.equal(cartItemText, 'iPhone');
+
+       
