@@ -1,0 +1,21 @@
+const { remote } = require('webdriverio');
+const assert = require('assert');
+
+describe('Ejemplo de automatización de UI con WebDriverIO', () => {
+    let browser;
+
+    beforeEach(async () => {
+        browser = await remote({
+            logLevel: 'error',
+            capabilities: {
+                browserName: 'chrome'
+            }
+        });
+    });
+
+    afterEach(async () => {
+        await browser.deleteSession();
+    });
+
+
+
