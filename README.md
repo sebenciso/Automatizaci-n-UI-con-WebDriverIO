@@ -1,6 +1,5 @@
 # Automatizaci-n-UI-con-WebDriverIO
-Ejercicio de Automatización UI con WebDriver JavaScript
-Automatización de UI con JavaScript y WebDriverIO
+Ejercicio de Automatización UI con JavaScript y WebDriverIO
 Este ejercicio tiene como objetivo enseñarte cómo automatizar pruebas de interfaz de usuario (UI) utilizando JavaScript y la biblioteca WebDriverIO.
 
 Prerrequisitos
