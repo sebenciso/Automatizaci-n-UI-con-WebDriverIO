@@ -1,0 +1,43 @@
+    it('realiza los pasos 1-10', async () => {
+        // 1. Abrir un sitio web
+        await browser.url('http://opencart.abstracta.us');
+
+        // 2. En la barra de búsqueda, ingresar el producto “iPhone” y buscar.
+        const searchBar = await browser.$('#searchBar');
+        await searchBar.setValue('iPhone');
+        await searchBar.submit();
+
+        // 3. Seleccionar la primera opción que aparezca.
+        const firstOption = await browser.$('#firstOption');
+        await firstOption.click();
+
+        // 4. Agregar el producto al carrito de compras.
+        const addToCartButton = await browser.$('#addToCartButton');
+        await addToCartButton.click();
+
+        // 5. Ingresar al botón del carrito de compras.
+        const cartButton = await browser.$('#cartButton');
+        await cartButton.click();
+            // 6. Presionar "View Cart".
+        const viewCartButton = await browser.$('#viewCartButton');
+        await viewCartButton.click();
+
+        // 7. Validar que el iPhone seleccionado se encuentre en el carrito de compras.
+        const cartItem = await browser.$('#cartItem');
+        const cartItemText = await cartItem.getText();
+        assert.equal(cartItemText, 'iPhone');
+
+        // 8. Remover el iPhone del carrito de compras.
+        const removeFromCartButton = await browser.$('#removeFromCartButton');
+        await removeFromCartButton.click();
+
+       // 9. Validar que el iPhone ya no se encuentre en el carrito de compras.
+        try {  
+             await browser.waitUntil(
+               async () => !(await browser.isExisting('#cartItem')),
+               5000
+                  );
+            } catch (error) {
+        assert.fail('El iPhone aún se encuentra en el carrito de compras');
+    }
+});
